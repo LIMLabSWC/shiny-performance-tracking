@@ -1,3 +1,51 @@
+<<<<<<< HEAD
+=======
+path_to_qp_mice <- file.path("V:","Quentin","Head_Fixed_Behavior","Data") 
+
+files <- list.files(
+  path_to_qp_mice, 
+  pattern = "^Trial_Summary.*\\.csv$", 
+  full.names = TRUE, 
+  include.dirs = TRUE,
+  recursive = TRUE
+  )
+
+# Read each file into a tibble, extracting the basename and dirname
+tibbles <- files[1:100] %>%
+  purrr::map(~ {
+    data <- read_csv(.x)
+    # data$file_path <-.x
+    # data$basename <- basename(.x)
+    # data$dirname <- dirname(.x)
+    # data
+  })
+
+
+col_names <- lapply(tibbles, colnames) %>% unlist() %>% unique() %>% sort()
+
+
+
+
+library(stringdist)
+
+# Calculate the distance matrix using Levenshtein distance
+distance_matrix <- stringdistmatrix(col_names, col_names, method = "lv")
+threshold <- 3
+
+hc <- hclust(as.dist(distance_matrix), method = "average")
+clusters <- cutree(hc, h = threshold)
+unique_ids <- paste0("Cluster_", clusters)
+
+cols <- tibble(
+  col_names1 = col_names,
+  cluster = unique_ids
+  
+)
+
+plot(hc)
+
+
+>>>>>>> making basic plots for mouse shiny app
 qp_mice <- read_csv(
   file.path(
     "V:","Quentin","Head_Fixed_Behavior","Data" ,
@@ -154,6 +202,7 @@ qp_mice %>%
   ) +
   plot_theme_settings()
 
+<<<<<<< HEAD
 
 # choice direction
 qp_mice %>% 
@@ -172,3 +221,5 @@ qp_mice %>%
     size = 2
   ) +
   plot_theme_settings()
+=======
+>>>>>>> making basic plots for mouse shiny app
