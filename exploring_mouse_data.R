@@ -1,48 +1,3 @@
-path_to_qp_mice <- file.path("V:","Quentin","Head_Fixed_Behavior","Data") 
-
-files <- list.files(
-  path_to_qp_mice, 
-  pattern = "^Trial_Summary.*\\.csv$", 
-  full.names = TRUE, 
-  include.dirs = TRUE,
-  recursive = TRUE
-  )
-
-# Read each file into a tibble, extracting the basename and dirname
-tibbles <- files[1:100] %>%
-  purrr::map(~ {
-    data <- read_csv(.x)
-    # data$file_path <-.x
-    # data$basename <- basename(.x)
-    # data$dirname <- dirname(.x)
-    # data
-  })
-
-
-col_names <- lapply(tibbles, colnames) %>% unlist() %>% unique() %>% sort()
-
-
-
-
-library(stringdist)
-
-# Calculate the distance matrix using Levenshtein distance
-distance_matrix <- stringdistmatrix(col_names, col_names, method = "lv")
-threshold <- 3
-
-hc <- hclust(as.dist(distance_matrix), method = "average")
-clusters <- cutree(hc, h = threshold)
-unique_ids <- paste0("Cluster_", clusters)
-
-cols <- tibble(
-  col_names1 = col_names,
-  cluster = unique_ids
-  
-)
-
-plot(hc)
-
-
 qp_mice <- read_csv(
   file.path(
     "V:","Quentin","Head_Fixed_Behavior","Data" ,
@@ -199,3 +154,21 @@ qp_mice %>%
   ) +
   plot_theme_settings()
 
+
+# choice direction
+qp_mice %>% 
+  dplyr::filter(Date > daterange) %>% 
+  dplyr::group_by(Participant_ID, Date) %>%
+  summarise(
+    all_trials = length(choice),
+    right_trials = sum(choice),
+    left_trials = all_trials - right_trials
+    ) %>% 
+  tidyr::gather(key = "choice_direction", value = "No_pokes", right_trials, left_trials) %>% 
+  ggplot(aes(x = Participant_ID, y = No_pokes, fill = choice_direction)) +
+  geom_boxplot(alpha = 0.3) +
+  geom_point(aes(group = choice_direction, col = choice_direction),
+    position = position_dodge(width = 0.75),
+    size = 2
+  ) +
+  plot_theme_settings()
