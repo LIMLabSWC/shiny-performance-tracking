@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 path_to_qp_mice <- file.path("V:","Quentin","Head_Fixed_Behavior","Data") 
 
 files <- list.files(
@@ -45,7 +43,6 @@ cols <- tibble(
 plot(hc)
 
 
->>>>>>> making basic plots for mouse shiny app
 qp_mice <- read_csv(
   file.path(
     "V:","Quentin","Head_Fixed_Behavior","Data" ,
@@ -202,7 +199,6 @@ qp_mice %>%
   ) +
   plot_theme_settings()
 
-<<<<<<< HEAD
 
 # choice direction
 qp_mice %>% 
@@ -221,5 +217,3 @@ qp_mice %>%
     size = 2
   ) +
   plot_theme_settings()
-=======
->>>>>>> making basic plots for mouse shiny app
