@@ -17,10 +17,10 @@ computer_name <- Sys.info()[["nodename"]]
 # Define paths based on the computer name
 if (computer_name == "LAPTOP-DSAR795N") {
   path_to_mat_files <- file.path(
-    "V:", "_raw_data", "rat_training_172", "SoloData", "Data"
+    "Z:", "_raw_data", "rat_training_172", "SoloData", "Data"
   )
   path_to_rds_files <- file.path(
-    "V:", "_raw_data", "rat_training_172", "rds_files"
+    "Z:", "_raw_data", "rat_training_172", "rds_files"
   )
 } else if (computer_name == "akramihpc1.akramilab.swc.ucl.ac.uk") {
   path_to_mat_files <- file.path(
