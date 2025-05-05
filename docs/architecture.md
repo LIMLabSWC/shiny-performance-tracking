@@ -46,15 +46,13 @@ graph TD
   G -->|read full CSV| H[load_data.R]
   H -->|cleaned & reshaped tibble| I[Shiny app: ggplot modules]
 
-  %% ───────────── Legend Section ─────────────
-  subgraph Legend [Legend]
+  %% Legend
+  subgraph Legend
     direction TB
-    L1[🟦 Script]:::legend
-    L2[⬇️ Input/Output]:::legend
-    L3[🔲 Grouped Step (dashed box)]:::legend
+    L1[Script = rectangle node]
+    L2[Input/Output = arrow label]
+    L3[Dashed box = grouped script logic]
   end
-
-  classDef legend fill:#f9f9f9,stroke:#ccc,color:#333;
 
 ```
 
