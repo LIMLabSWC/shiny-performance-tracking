@@ -2,7 +2,6 @@
 
 This document outlines the architecture and data flow of the **Shiny Performance Tracking** system. The project processes and visualizes rodent training data collected via **BControl** or **Bpod** experimental setups.
 
----
 
 ## 🧱 High-Level Components
 
@@ -11,8 +10,6 @@ This document outlines the architecture and data flow of the **Shiny Performance
 - **Parsing**: Extracted into structured R lists representing metadata and trial data.
 - **Aggregation**: Session-level summaries are appended into `TRAINING.csv`.
 - **Visualization**: Interactive Shiny app for viewing trends across animals, stages, and protocols.
-
----
 
 ## 🔄 Data Flow
 
@@ -24,12 +21,24 @@ This document outlines the architecture and data flow of the **Shiny Performance
 3. Shiny app (`shiny_app/app.R`) loads `TRAINING.csv` using `load_data.R`
 4. Visualization functions in `shiny_app/functions/` generate plots.
 
----
+
+```mermaid
+graph TD
+  A[.mat files] --> B[ConvertToRDS.R]
+  B --> C{ReadData.R}
+  C -->|BControl| D[ReadBcontrolData.R]
+  C -->|Bpod| E[ReadBpodData.R]
+  D --> F[Session-level list]
+  E --> F
+  F --> G[TRAININGtoCSV.R]
+  G --> H[TRAINING.csv (in shiny_app/)]
+  H --> I[load_data.R]
+  I --> J[Shiny app plots]
+```
 
 ## 🗂️ Folder Structure Summary
 
 ```
-
 shiny-performance-tracking/
 ├── shiny\_app/
 │   ├── app.R                   # Main Shiny app
@@ -45,7 +54,6 @@ shiny-performance-tracking/
 
 ```
 
----
 
 ## 📈 Plot Functions
 
@@ -58,7 +66,6 @@ These are modular ggplot-based scripts that power the Shiny dashboard:
 
 Each one uses a consistent API: filters by protocol, date, stage, experimenter, and animal.
 
----
 
 ## 🧠 Design Notes
 
