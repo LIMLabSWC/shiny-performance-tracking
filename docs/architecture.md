@@ -22,8 +22,39 @@ This document outlines the architecture and data flow of the **Shiny Performance
 4. Visualization functions in `shiny_app/functions/` generate plots.
 
 ![Mermaid Diagram](https://mermaidviewer.com/api/diagrams/cmabqds5m01y4mt1cg7bcv904/image)
+
+
 ```mermaid
-![Mermaid Diagram](https://mermaidviewer.com/api/diagrams/cmabqds5m01y4mt1cg7bcv904/image)
+sequenceDiagram
+    participant Cron as cron/systemd (optional)
+    participant Extract as ExtractSaveData.R
+    participant Drive as Centralized Data Drive
+    participant Convert as ConvertToRDS.R
+    participant ReadData as ReadData.R (wrapper)
+    participant Bcontrol as ReadBcontrolData.R
+    participant Bpod as ReadBpodData.R
+    participant CSV as TRAININGtoCSV.R
+    participant Loader as load_data.R
+    participant App as Shiny app
+
+    Cron->>Extract: scheduled trigger
+    Extract->>Drive: scan for new .mat files
+    Extract->>Convert: call ConvertToRDS.R
+    Convert-->>Extract: .rds file
+    Extract->>ReadData: pass .rds file
+
+    alt Source is BControl
+        ReadData->>Bcontrol: .rds file
+        Bcontrol-->>ReadData: TRAINING list
+    else Source is Bpod
+        ReadData->>Bpod: .rds file
+        Bpod-->>ReadData: TRAINING list
+    end
+
+    ReadData-->>Extract: TRAINING list
+    Extract->>CSV: pass TRAINING list
+    CSV->>Loader: TRAINING.csv
+    Loader->>App: tidy tibble
 ```
 
 ## 🗂️ Folder Structure Summary
