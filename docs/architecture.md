@@ -25,12 +25,20 @@ This document outlines the architecture and data flow of the **Shiny Performance
 ```mermaid
 graph TD
 
-  %% Step 0: Source
+  %% Pipeline
   A[Rig or BControl system] -->|.mat file| B[ConvertToRDS.R]
-  B -->|.rds file| C[ReadData.R wrapper for BControl and Bpod]
+  B -->|.rds file| C[ReadData.R - wrapper for ReadBcontrolData.R and ReadBpodData.R]
   C -->|TRAINING list| D[TRAININGtoCSV.R]
   D -->|TRAINING.csv| E[load_data.R]
   E -->|tidy tibble| F[Shiny app plots]
+
+  %% Unified styling based on function
+  classDef script fill:#f2f6fa,stroke:#b0c4de,color:#222;
+  classDef file fill:#f8f8f8,stroke:#ccc,color:#444;
+
+  class A,D file;
+  class B,C,D,E,F script;
+
 ```
 
 ## 🗂️ Folder Structure Summary
