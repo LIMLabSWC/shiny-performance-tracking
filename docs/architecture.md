@@ -23,11 +23,6 @@ This document outlines the architecture and data flow of the **Shiny Performance
 
 
 ```mermaid
-%% Legend:
-%% • Rectangles = R scripts
-%% • Arrows = data flow (inputs/outputs)
-%% • Dashed box = group of steps executed inside ExtractSaveData.R
-
 graph TD
 
   %% Raw input
@@ -50,6 +45,16 @@ graph TD
   F -->|append rows| G["TRAINING.csv (in shiny_app/)"]
   G -->|read full CSV| H[load_data.R]
   H -->|cleaned & reshaped tibble| I[Shiny app: ggplot modules]
+
+  %% ───────────── Legend Section ─────────────
+  subgraph Legend [Legend]
+    direction TB
+    L1[🟦 Script]:::legend
+    L2[⬇️ Input/Output]:::legend
+    L3[🔲 Grouped Step (dashed box)]:::legend
+  end
+
+  classDef legend fill:#f9f9f9,stroke:#ccc,color:#333;
 
 ```
 
