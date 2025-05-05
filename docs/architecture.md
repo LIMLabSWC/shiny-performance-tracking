@@ -25,34 +25,23 @@ This document outlines the architecture and data flow of the **Shiny Performance
 ```mermaid
 graph TD
 
-  %% Raw input
-  A[.mat files] -->|raw MATLAB data| B[ConvertToRDS.R]
+  %% Input
+  A[.mat files] -->|raw MATLAB session| B[ConvertToRDS.R]
+  B -->|.rds file| C[ReadData.R]
 
-  %% ExtractSaveData.R wrapper
-  subgraph ExtractSaveData.R [ ]
+  %% ExtractSaveData.R encapsulates the following
+  subgraph ExtractSaveData.R [ExtractSaveData.R (main pipeline)]
     style ExtractSaveData.R stroke-dasharray: 5 5
 
-    B -->|.rds file| C[ReadData.R]
-
-    C -->|BControl .rds → rat_data| D[ReadBcontrolData.R]
-    C -->|Bpod .rds → rat_data| E[ReadBpodData.R]
-
-    D -->|TRAINING list| F[TRAININGtoCSV.R]
-    E -->|TRAINING list| F
+    C -->|BControl .rds| D[ReadBcontrolData.R]
+    C -->|Bpod .rds| E[ReadBpodData.R]
+    D -->|session list| F[TRAININGtoCSV.R]
+    E -->|session list| F
   end
 
-  %% Output and downstream
   F -->|append rows| G["TRAINING.csv (in shiny_app/)"]
-  G -->|read full CSV| H[load_data.R]
-  H -->|cleaned & reshaped tibble| I[Shiny app: ggplot modules]
-
-  %% Legend
-  subgraph Legend
-    direction TB
-    L1[Script = rectangle node]
-    L2[Input/Output = arrow label]
-    L3[Dashed box = grouped script logic]
-  end
+  G -->|read CSV| H[load_data.R]
+  H -->|cleaned tibble| I[Shiny app: plots]
 
 ```
 
