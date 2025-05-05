@@ -31,7 +31,7 @@ graph TD
   D --> F[Session-level list]
   E --> F
   F --> G[TRAININGtoCSV.R]
-  G --> H[TRAINING.csv (in shiny_app/)]
+  G --> H["TRAINING.csv (shiny_app folder)"]
   H --> I[load_data.R]
   I --> J[Shiny app plots]
 ```
