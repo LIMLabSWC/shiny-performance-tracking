@@ -25,20 +25,18 @@ This document outlines the architecture and data flow of the **Shiny Performance
 ```mermaid
 graph TD
 
-  subgraph ExtractSaveData.R [ExtractSaveData.R]
-    B[ConvertToRDS.R]
-    C{ReadData.R}
-    C -->|BControl| D[ReadBcontrolData.R]
-    C -->|Bpod| E[ReadBpodData.R]
-    D --> F[Session-level list]
-    E --> F
-    F --> G[TRAININGtoCSV.R]
-  end
+  A[.mat files] -->|raw MATLAB data| B[ConvertToRDS.R]
+  B -->|.rds file| C[ReadData.R]
 
-  A[.mat files] --> B
-  G --> H["TRAINING.csv (shiny_app folder)"]
-  H --> I[load_data.R]
-  I --> J[Shiny app plots]
+  C -->|BControl .rds → rat_data| D[ReadBcontrolData.R]
+  C -->|Bpod .rds → rat_data| E[ReadBpodData.R]
+
+  D -->|TRAINING list| F[TRAININGtoCSV.R]
+  E -->|TRAINING list| F
+
+  F -->|append rows| G["TRAINING.csv (shiny_app/)"]
+  G -->|read full CSV| H[load_data.R]
+  H -->|cleaned + reshaped tibble| I[Shiny app: ggplot modules]
 ```
 
 ## 🗂️ Folder Structure Summary
