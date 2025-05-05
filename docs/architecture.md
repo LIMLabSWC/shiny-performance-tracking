@@ -27,11 +27,11 @@ graph TD
 
   %% Step 1: .mat input to .rds
   A[".mat file (from BControl or Bpod)"] --> B[ConvertToRDS.R]
-  B -->|".rds file (converted from .mat)"| C[ReadData.R]
+  B -->|".rds file (converted from .mat)"| C
 
   %% Step 2: Dispatch to reader
-  subgraph ReadData.R [ReadData.R dispatch]
-    style ReadData.R stroke-dasharray: 5 5
+  subgraph ReadData [ReadData.R wrapper script]
+    style ReadData stroke-dasharray: 5 5
     C -->|bControl .rds| D[ReadBcontrolData.R]
     C -->|bpod .rds| E[ReadBpodData.R]
   end
@@ -43,6 +43,7 @@ graph TD
 
   %% Step 4: Shiny pipeline
   G -->|"cleaned tibble (reshaped for plotting)"| H[Shiny app: plot modules]
+
 
 ```
 
