@@ -29,9 +29,9 @@ graph TD
   A[.mat files] -->|raw MATLAB session| B[ConvertToRDS.R]
   B -->|.rds file| C[ReadData.R]
 
-  %% ExtractSaveData.R encapsulates the following
-  subgraph ExtractSaveData.R [ExtractSaveData.R (main pipeline)]
-    style ExtractSaveData.R stroke-dasharray: 5 5
+  %% ExtractSaveData.R encapsulated steps
+  subgraph EX [ExtractSaveData.R pipeline]
+    style EX stroke-dasharray: 5 5
 
     C -->|BControl .rds| D[ReadBcontrolData.R]
     C -->|Bpod .rds| E[ReadBpodData.R]
@@ -41,7 +41,7 @@ graph TD
 
   F -->|append rows| G["TRAINING.csv (in shiny_app/)"]
   G -->|read CSV| H[load_data.R]
-  H -->|cleaned tibble| I[Shiny app: plots]
+  H -->|cleaned tibble| I[Shiny app plots]
 
 ```
 
