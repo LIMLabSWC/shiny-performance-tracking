@@ -1,96 +1,63 @@
----
+# Usage Guide
 
-title: "shiny-performance-tracking"
-output: github\_document
-------------------------
-
-# Shiny Performance Tracking
-
-A pipeline for extracting, processing, and visualizing rodent behavioral training data using R and Shiny.
+This guide walks you through how to process new data files and run the Shiny dashboard.
 
 ---
 
-## 🧠 Purpose
+## 🧪 Step 1: Convert `.mat` Files to `.rds` and Append to `TRAINING.csv`
 
-This project supports labs running experiments via **BControl** or **Bpod**, enabling them to:
-
-* Convert raw `.mat` files into `.rds` for easier handling
-* Extract and clean session-level data automatically
-* Visualize training progress and performance metrics interactively
-* Deploy the analysis as a Shiny web app
-
----
-
-## 📂 Project Structure
-
-```
-shiny-performance-tracking/
-├── shiny_app/             # Shiny frontend and preprocessed data
-├── utility_functions/     # Backend data extraction utilities
-├── docs/                  # Documentation files (architecture, usage, dictionary)
-├── ExtractSaveData.R      # Main processing pipeline
-├── analysis.R             # Offline exploration
-└── README.md              # (You are here)
-```
-
----
-
-## 🚀 Quick Start
-
-1. Add `.mat` files to your data folder
-2. Run:
-
-   ```r
-   source("ExtractSaveData.R")
-   ```
-3. Launch the app:
-
-   ```r
-   shiny::runApp("shiny_app")
-   ```
-
----
-
-## 📊 Features
-
-* Boxplots of choice direction
-* Time series of completed trials
-* Accuracy ratio plots
-* Stage tracking visuals
-* Experimenter/animal filtering
-
----
-
-## 📖 Documentation
-
-| File                      | Purpose                       |
-| ------------------------- | ----------------------------- |
-| `docs/architecture.Rmd`   | Full system overview          |
-| `docs/data_dictionary.md` | Description of TRAINING.csv   |
-| `docs/usage_guide.md`     | End-to-end usage instructions |
-
----
-
-## 🧰 Dependencies
-
-R packages:
+1. Place new `.mat` files in the data directory configured via `path_to_mat_files`.
+2. Run the main script:
 
 ```r
-c("tidyverse", "ggplot2", "ggpubr", "stringr", "parallel", "R.matlab", "ggrepel")
+source("ExtractSaveData.R")
+````
+
+This will:
+
+* Identify new (unprocessed) `.mat` files
+* Convert them to `.rds` using `ConvertToRDS.R`
+* Extract metadata with `ReadBcontrolData.R` or `ReadBpodData.R`
+* Append results to `shiny_app/TRAINING.csv`
+
+> ✅ Already-processed files are skipped automatically.
+
+---
+
+## 📊 Step 2: Launch the Shiny Dashboard
+
+From within R or RStudio:
+
+```r
+setwd("shiny_app")
+shiny::runApp()
+```
+
+The app loads `TRAINING.csv`, applies cleaning and reshaping (via `load_data.R`), and generates interactive plots.
+
+---
+
+## 🧪 Optional: Trial-by-Trial Data Export
+
+Uncomment this block in `ExtractSaveData.R` to enable trial-level exports:
+
+```r
+# walk(rds_list, ~ ReadData(rds_file = .x, trialData = TRUE) %>%
+#        TRAININGtoCSV(filename = "TrialByTrial.csv"))
 ```
 
 ---
 
-## 📤 Deployment
+## 🧼 Notes
 
-App can be deployed to [shinyapps.io](https://www.shinyapps.io) using files in `shiny_app/rsconnect/`.
-
----
-
-## 🧪 Credits
-
-Developed by Viktor Plattner at the Akrami Lab (UCL - SWC).
+* The pipeline uses **parallel processing** to speed up file conversion.
+* `shiny_app/full_TRAINING.csv` can be used to accumulate data across sessions or datasets.
+* Only sessions not already listed in the CSV will be added.
+* You can rerun `ExtractSaveData.R` safely without duplicating entries.
 
 ---
 
-> See `docs/` for extended documentation. Contributions and feedback are welcome!
+## 🔧 Troubleshooting
+
+* If the Shiny app fails to launch, check for formatting issues in `TRAINING.csv` (e.g., broken rows).
+* Ensure that all required packages are installed: `tidyverse`, `R.matlab`, `shiny`, `ggpubr`, `ggrepel`, `parallel`.

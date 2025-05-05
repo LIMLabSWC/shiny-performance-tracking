@@ -1,80 +1,46 @@
 # Data Dictionary: TRAINING.csv
 
-This file describes the structure and meaning of each column in `shiny_app/TRAINING.csv`, the primary dataset used in analysis and visualization.
+This file defines the meaning and origin of each column in `TRAINING.csv`, the main dataset used by the Shiny app.
 
 ---
 
-## 🧪 Metadata Fields
+## 📋 Column Descriptions
 
-| Column          | Type   | Description                                        |
-| --------------- | ------ | -------------------------------------------------- |
-| `file`          | string | Source filename (.mat converted to .rds)           |
-| `settings_file` | string | Name of the settings file loaded during experiment |
-| `protocol`      | string | Protocol type parsed from filename                 |
-| `data_source`   | string | Source system: `bcontrol` or `bpod`                |
-| `experimenter`  | string | User who ran the experiment                        |
-| `animal_id`     | string | Uppercased animal identifier                       |
-| `rig_id`        | string | Rig or setup used                                  |
-
-## 📅 Timing Fields
-
-| Column           | Type    | Description                                               |
-| ---------------- | ------- | --------------------------------------------------------- |
-| `date`           | Date    | Session date (parsed from save time)                      |
-| `start_time`     | time    | Time the experiment began                                 |
-| `save_time`      | time    | Time the session file was saved                           |
-| `session_length` | numeric | Duration in minutes (calculated from start and save time) |
-
-## 🧠 Stage Information
-
-| Column  | Type   | Description                                                              |
-| ------- | ------ | ------------------------------------------------------------------------ |
-| `stage` | string | Training stage label (recoded from numeric codes and reward type fields) |
-
-## 🐁 Behavior Counts
-
-| Column             | Type    | Description                                        |
-| ------------------ | ------- | -------------------------------------------------- |
-| `right_trials`     | integer | Number of right pokes in session                   |
-| `left_trials`      | integer | Number of left pokes in session                    |
-| `right_hit_frac`   | numeric | Fraction of hits on right side                     |
-| `left_hit_frac`    | numeric | Fraction of hits on left side                      |
-| `all_trials`       | integer | Total number of trials completed                   |
-| `completed_trials` | integer | Trials with valid outcomes (non-timeout/violation) |
-| `correct_trials`   | integer | Trials marked as hits (value = 1)                  |
-| `error_trials`     | integer | Trials marked as misses (value = 0)                |
-| `violation_trials` | integer | Trials marked as violations                        |
-| `timeoout_trials`  | integer | Trials that timed out                              |
-
-## ⏱ Timing Variables
-
-| Column        | Type    | Description                                                        |
-| ------------- | ------- | ------------------------------------------------------------------ |
-| `init_CP`     | numeric | Initial center poke duration                                       |
-| `total_CP`    | numeric | Total center poke duration for session                             |
-| `A1_time`     | numeric | Delay between center poke and stim onset                           |
-| `A2_time`     | numeric | Delay between stimulus and response phase                          |
-| `reward_type` | string  | Reward schedule used (e.g., `Always`, `NoReward`, `DelayedReward`) |
-
-## 📊 Reshaped Fields (long format)
-
-| Column             | Type    | Description                                       |
-| ------------------ | ------- | ------------------------------------------------- |
-| `choice_direction` | string  | Either `left_trials` or `right_trials`            |
-| `No_pokes`         | integer | Count of pokes corresponding to choice\_direction |
+| Column             | Description |
+|--------------------|-------------|
+| `file`             | Filename of the original `.mat` file |
+| `settings_file`    | Settings file basename used in the session |
+| `protocol`         | Protocol name parsed from the filename |
+| `data_source`      | Source type: either `"bcontrol"` or `"bpod"` |
+| `experimenter`     | Name of the person who ran the session |
+| `animal_id`        | Unique identifier of the subject |
+| `rig_id`           | ID of the behavioral rig used |
+| `date`             | Session date (parsed from save timestamp) |
+| `start_time`       | Start time (converted from load timestamp) |
+| `save_time`        | Save time (timestamp of session end) |
+| `stage`            | Stage label (e.g., `"1_center_poke_on"`, `"3_NoReward"`) |
+| `right_trials`     | Number of right-sided choices |
+| `left_trials`      | Number of left-sided choices |
+| `right_hit_frac`   | Hit fraction for right trials (if available) |
+| `left_hit_frac`    | Hit fraction for left trials (if available) |
+| `all_trials`       | Total number of trials attempted |
+| `completed_trials` | Trials with valid outcome (correct or error) |
+| `correct_trials`   | Number of correct (i.e., rewarded) trials |
+| `error_trials`     | Number of incorrect responses |
+| `violation_trials` | Number of rule violations during the session |
+| `timeoout_trials`  | Number of timeout trials |
+| `init_CP`          | Initial center poke duration |
+| `total_CP`         | Total center poke duration |
+| `A1_time`, `A2_time` | Time spent in certain state/action windows |
+| `reward_type`      | Type of reward policy used |
+| `session_length`   | Derived from `save_time - start_time` |
+| `choice_direction` | Either `"left_trials"` or `"right_trials"` (long format) |
+| `No_pokes`         | Number of pokes for the given choice direction |
 
 ---
 
-## Notes
+## 📝 Notes
 
-* Field values marked as `"empty_field_in_mat_file"` indicate missing or unlogged information.
-* Stage names are assigned in `load_data.R` and may combine reward conditions with numerical stage IDs.
-* The `choice_direction` reshaping allows per-choice visualization using ggplot.
-
-## Source
-
-Most fields are parsed from `.mat` files using `ReadBcontrolData.R` or `ReadBpodData.R`, aggregated by `ExtractSaveData.R`, and written to CSV by `TRAININGtoCSV.R`.
-
----
-
-> This document is maintained in `docs/data_dictionary.md` to support interpretation of behavioral training data.
+- Some fields (like `reward_type`, `stage`, and `A2_time`) are re-coded during the `load_data.R` cleaning step.
+- The file is reshaped to *long format* before plotting: one row per choice direction (`left_trials` or `right_trials`).
+- Fields marked as `"empty_field_in_mat_file"` were missing in the original `.mat`.

@@ -1,8 +1,3 @@
----
-title: "Shiny Performance Tracking"
-output: github_document
----
-
 # Shiny Performance Tracking
 
 This repository provides a complete pipeline for processing rodent training data, converting raw `.mat` files into structured `.rds` files, extracting behavioral metrics, and visualizing performance trends in an interactive Shiny dashboard.
@@ -26,8 +21,8 @@ The system enables researchers to:
 
 shiny-performance-tracking/
 ├── analysis.R               # Standalone data analysis
-├── dependencies.R           # (Optional) custom package loading
-├── exploring\_data.R         # Standalone data exploration
+├── dependencies.R           # Optional dependency loader
+├── exploring\_data.R         # Interactive or ad hoc exploration
 ├── ExtractSaveData.R        # Main ETL pipeline: from .mat to .csv
 ├── shiny\_app/
 │   ├── app.R
@@ -42,10 +37,9 @@ shiny-performance-tracking/
 │   ├── ReadTrialData.R
 │   └── TRAININGtoCSV.R
 ├── docs/
-│   ├── architecture.Rmd
+│   ├── architecture.md
 │   ├── data\_dictionary.md
 │   ├── usage\_guide.md
-│   └── README\_template.Rmd
 └── README.md                # Overview + links to docs
 
 ````
@@ -72,28 +66,28 @@ The dashboard includes:
 
 ## 📦 Dependencies
 
-```r
-library(tidyverse)
-library(ggplot2)
-library(ggrepel)
-library(ggpubr)
-library(R.matlab)
-library(parallel)
-library(readr)
-```
+You’ll need the following packages:
+
+* `tidyverse`
+* `ggplot2`
+* `ggrepel`
+* `ggpubr`
+* `R.matlab`
+* `parallel`
+* `readr`
 
 ---
 
 ## 📚 Documentation
 
-* [Architecture Overview](architecture.Rmd)
-* [Data Dictionary](data_dictionary.md)
-* [Usage Guide](usage_guide.md)
+* [System Architecture](docs/architecture.md)
+* [Data Dictionary](docs/data_dictionary.md)
+* [Usage Guide](docs/usage_guide.md)
 
 ---
 
 ## 🧠 Notes
 
-* The `ExtractSaveData.R` script supports batch processing and parallel conversion.
-* Data is updated automatically when new `.mat` files are placed in the source folder.
-* Supports both session-level and (optionally) trial-by-trial analysis.
+* `ExtractSaveData.R` supports batch processing and parallel conversion.
+* New `.mat` files added to the source directory are automatically processed and appended.
+* The system supports both session-level and trial-by-trial data (optional).
