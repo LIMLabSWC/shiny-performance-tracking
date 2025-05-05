@@ -23,22 +23,36 @@ This document outlines the architecture and data flow of the **Shiny Performance
 
 
 ```mermaid
-graph TD
+sequenceDiagram
+    participant Cron as cron/systemd (optional)
+    participant Extract as ExtractSaveData.R
+    participant Drive as Centralized Data Drive
+    participant Convert as ConvertToRDS.R
+    participant ReadData as ReadData.R (wrapper)
+    participant Bcontrol as ReadBcontrolData.R
+    participant Bpod as ReadBpodData.R
+    participant CSV as TRAININGtoCSV.R
+    participant Loader as load_data.R
+    participant App as Shiny app
 
-  %% Pipeline
-  A[Rig or BControl system] -->|.mat file| B[ConvertToRDS.R]
-  B -->|.rds file| C[ReadData.R - wrapper for ReadBcontrolData.R and ReadBpodData.R]
-  C -->|TRAINING list| D[TRAININGtoCSV.R]
-  D -->|TRAINING.csv| E[load_data.R]
-  E -->|tidy tibble| F[Shiny app plots]
+    Cron->>Extract: scheduled trigger
+    Extract->>Drive: scan for new .mat files
+    Extract->>Convert: call ConvertToRDS.R
+    Convert-->>Extract: .rds file
+    Extract->>ReadData: pass .rds file
 
-  %% Unified styling based on function
-  classDef script fill:#f2f6fa,stroke:#b0c4de,color:#222;
-  classDef file fill:#f8f8f8,stroke:#ccc,color:#444;
+    alt Source is BControl
+        ReadData->>Bcontrol: .rds file
+        Bcontrol-->>ReadData: TRAINING list
+    else Source is Bpod
+        ReadData->>Bpod: .rds file
+        Bpod-->>ReadData: TRAINING list
+    end
 
-  class A,D file;
-  class B,C,D,E,F script;
-
+    ReadData-->>Extract: TRAINING list
+    Extract->>CSV: pass TRAINING list
+    CSV->>Loader: TRAINING.csv
+    Loader->>App: tidy tibble
 ```
 
 ## 🗂️ Folder Structure Summary
