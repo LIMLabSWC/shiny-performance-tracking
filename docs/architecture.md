@@ -26,25 +26,24 @@ This document outlines the architecture and data flow of the **Shiny Performance
 graph TD
 
   %% Step 1: file input
-  A[".mat file (from BControl or Bpod)"] --> B[ConvertToRDS.R]
-  B -->|".rds file (converted from .mat)"| C
+  A((.mat file from BControl or Bpod)) -->|raw MATLAB session| B[ConvertToRDS.R]
+  B -->|.rds file| C((.rds file))
 
-  %% Step 2: ReadData.R dispatch logic
-  subgraph ReadData [ReadData.R wrapper script]
-    style ReadData stroke-dasharray: 5 5
+  %% Step 2: ReadData dispatch logic
+  subgraph ReadDataWrapper [ReadData.R wrapper script]
+    style ReadDataWrapper stroke-dasharray: 5 5
     C -->|BControl .rds| D[ReadBcontrolData.R]
     C -->|Bpod .rds| E[ReadBpodData.R]
   end
 
-  %% Step 3: Output to CSV
+  %% Step 3: CSV writing
   D -->|TRAINING list| F[TRAININGtoCSV.R]
   E -->|TRAINING list| F
-  F -->|"TRAINING.csv (session data from raw data files)"| G[load_data.R]
+  F -->|writes session data| G((TRAINING.csv))
 
-  %% Step 4: Shiny pipeline
-  G -->|"cleaned tibble (reshaped for plotting)"| H[Shiny app: plot modules]
-
-
+  %% Step 4: visualization
+  G -->|cleaned and reshaped| H[load_data.R]
+  H -->|tidy tibble for plotting| I[Shiny app plots]
 
 ```
 
