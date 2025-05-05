@@ -27,7 +27,7 @@ graph TD
 
   %% Step 0: Source
   A[Rig or BControl system] -->|.mat file| B[ConvertToRDS.R]
-  B -->|.rds file| C[ReadData.R (wrapper for ReadBcontrolData.R and ReadBpodData.R)]
+  B -->|.rds file| C[ReadData.R wrapper for ReadBcontrolData.R and ReadBpodData.R]
   C -->|BControl list| D[ReadBcontrolData.R]
   C -->|Bpod list| E[ReadBpodData.R]
   D -->|TRAINING list| F[TRAININGtoCSV.R]
