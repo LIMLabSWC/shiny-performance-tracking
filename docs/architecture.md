@@ -25,24 +25,25 @@ This document outlines the architecture and data flow of the **Shiny Performance
 ```mermaid
 graph TD
 
-  %% Step 1: .mat input to .rds
+  %% Step 1: file input
   A[".mat file (from BControl or Bpod)"] --> B[ConvertToRDS.R]
   B -->|".rds file (converted from .mat)"| C
 
-  %% Step 2: Dispatch to reader
+  %% Step 2: ReadData.R dispatch logic
   subgraph ReadData [ReadData.R wrapper script]
     style ReadData stroke-dasharray: 5 5
-    C -->|bControl .rds| D[ReadBcontrolData.R]
-    C -->|bpod .rds| E[ReadBpodData.R]
+    C -->|BControl .rds| D[ReadBcontrolData.R]
+    C -->|Bpod .rds| E[ReadBpodData.R]
   end
 
   %% Step 3: Output to CSV
   D -->|TRAINING list| F[TRAININGtoCSV.R]
   E -->|TRAINING list| F
-  F -->|"writes TRAINING.csv (session data from raw data files)"| G[load_data.R]
+  F -->|"TRAINING.csv (session data from raw data files)"| G[load_data.R]
 
   %% Step 4: Shiny pipeline
   G -->|"cleaned tibble (reshaped for plotting)"| H[Shiny app: plot modules]
+
 
 
 ```
