@@ -23,20 +23,34 @@ This document outlines the architecture and data flow of the **Shiny Performance
 
 
 ```mermaid
+%% Legend:
+%% • Rectangles = R scripts
+%% • Arrows = data flow (inputs/outputs)
+%% • Dashed box = group of steps executed inside ExtractSaveData.R
+
 graph TD
 
+  %% Raw input
   A[.mat files] -->|raw MATLAB data| B[ConvertToRDS.R]
-  B -->|.rds file| C[ReadData.R]
 
-  C -->|BControl .rds → rat_data| D[ReadBcontrolData.R]
-  C -->|Bpod .rds → rat_data| E[ReadBpodData.R]
+  %% ExtractSaveData.R wrapper
+  subgraph ExtractSaveData.R [ ]
+    style ExtractSaveData.R stroke-dasharray: 5 5
 
-  D -->|TRAINING list| F[TRAININGtoCSV.R]
-  E -->|TRAINING list| F
+    B -->|.rds file| C[ReadData.R]
 
-  F -->|append rows| G["TRAINING.csv (shiny_app/)"]
+    C -->|BControl .rds → rat_data| D[ReadBcontrolData.R]
+    C -->|Bpod .rds → rat_data| E[ReadBpodData.R]
+
+    D -->|TRAINING list| F[TRAININGtoCSV.R]
+    E -->|TRAINING list| F
+  end
+
+  %% Output and downstream
+  F -->|append rows| G["TRAINING.csv (in shiny_app/)"]
   G -->|read full CSV| H[load_data.R]
-  H -->|cleaned + reshaped tibble| I[Shiny app: ggplot modules]
+  H -->|cleaned & reshaped tibble| I[Shiny app: ggplot modules]
+
 ```
 
 ## 🗂️ Folder Structure Summary
