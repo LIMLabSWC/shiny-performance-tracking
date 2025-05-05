@@ -27,15 +27,10 @@ graph TD
 
   %% Step 0: Source
   A[Rig or BControl system] -->|.mat file| B[ConvertToRDS.R]
-  B -->|.rds file| C[ReadData.R wrapper for ReadBcontrolData.R and ReadBpodData.R]
-  C -->|BControl list| D[ReadBcontrolData.R]
-  C -->|Bpod list| E[ReadBpodData.R]
-  D -->|TRAINING list| F[TRAININGtoCSV.R]
-  E -->|TRAINING list| F
-  F -->|TRAINING.csv| G[load_data.R]
-  G -->|tidy tibble| H[Shiny app plots]
-
-
+  B -->|.rds file| C[ReadData.R wrapper for BControl and Bpod]
+  C -->|TRAINING list| D[TRAININGtoCSV.R]
+  D -->|TRAINING.csv| E[load_data.R]
+  E -->|tidy tibble| F[Shiny app plots]
 ```
 
 ## 🗂️ Folder Structure Summary
