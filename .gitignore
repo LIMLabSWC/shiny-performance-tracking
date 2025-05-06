@@ -32,3 +32,6 @@ exploring_data.R
 # Package installer — handled by .Rprofile, no longer needed in repo
 dependencies.R
 
+shiny_app/rsconnect/
+
+shiny_app/TrialByTrial.csv
