@@ -2,16 +2,15 @@
 
 This guide walks you through how to process new data files and run the Shiny dashboard.
 
----
 
-## 🧪 Step 1: Convert `.mat` Files to `.rds` and Append to `TRAINING.csv`
+## Step 1: Convert `.mat` Files to `.rds` and Append to `TRAINING.csv`
 
 1. Place new `.mat` files in the data directory configured via `path_to_mat_files`.
 2. Run the main script:
 
 ```r
 source("ExtractSaveData.R")
-````
+```
 
 This will:
 
@@ -22,9 +21,8 @@ This will:
 
 > ✅ Already-processed files are skipped automatically.
 
----
 
-## 📊 Step 2: Launch the Shiny Dashboard
+## Step 2: Launch the Shiny Dashboard
 
 From within R or RStudio:
 
@@ -35,18 +33,6 @@ shiny::runApp()
 
 The app loads `TRAINING.csv`, applies cleaning and reshaping (via `load_data.R`), and generates interactive plots.
 
----
-
-## 🧪 Optional: Trial-by-Trial Data Export
-
-Uncomment this block in `ExtractSaveData.R` to enable trial-level exports:
-
-```r
-# walk(rds_list, ~ ReadData(rds_file = .x, trialData = TRUE) %>%
-#        TRAININGtoCSV(filename = "TrialByTrial.csv"))
-```
-
----
 
 ## 🧼 Notes
 
@@ -55,7 +41,6 @@ Uncomment this block in `ExtractSaveData.R` to enable trial-level exports:
 * Only sessions not already listed in the CSV will be added.
 * You can rerun `ExtractSaveData.R` safely without duplicating entries.
 
----
 
 ## 🔧 Troubleshooting
 

@@ -2,9 +2,8 @@
 
 This file defines the meaning and origin of each column in `TRAINING.csv`, the main dataset used by the Shiny app.
 
----
 
-## 📋 Column Descriptions
+## Column Descriptions
 
 | Column             | Description |
 |--------------------|-------------|
@@ -37,9 +36,9 @@ This file defines the meaning and origin of each column in `TRAINING.csv`, the m
 | `choice_direction` | Either `"left_trials"` or `"right_trials"` (long format) |
 | `No_pokes`         | Number of pokes for the given choice direction |
 
----
 
-## 📝 Notes
+
+## Notes
 
 - Some fields (like `reward_type`, `stage`, and `A2_time`) are re-coded during the `load_data.R` cleaning step.
 - The file is reshaped to *long format* before plotting: one row per choice direction (`left_trials` or `right_trials`).

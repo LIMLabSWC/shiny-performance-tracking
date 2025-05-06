@@ -1,8 +1,14 @@
 # RStudio project-specific metadata (auto-generated, not needed in repo)
 .Rproj.user
-.Rhistory      # R command history (personal, changes constantly)
-.RData         # Workspace saved between R sessions (discouraged in version control)
-.Ruserdata     # User-level RStudio state
+
+# User-level RStudio state
+.Ruserdata 
+
+# Workspace saved between R sessions (discouraged in version control)
+.RData   
+
+# R command history (personal, changes constantly)
+.Rhistory      
 
 # Data folder (likely contains large or private raw data files)
 data/
