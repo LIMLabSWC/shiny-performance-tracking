@@ -18,7 +18,9 @@ data/
 
 # Project files (we want only one .Rproj file versioned, or none)
 shiny-performance-tracking.Rproj
-*.Rproj        # Ignores any other stray .Rproj files (e.g. from subprojects)
+
+# Ignores any other stray .Rproj files (e.g. from subprojects)
+*.Rproj        
 
 # Log files (temporary output from jobs/scripts)
 *.log
