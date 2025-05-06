@@ -3,7 +3,7 @@
 This document outlines the architecture and data flow of the **Shiny Performance Tracking** system. The project processes and visualizes rodent training data collected via **BControl** or **Bpod** experimental setups.
 
 
-## 🧱 High-Level Components
+## High-Level Components
 
 - **Raw Input**: `.mat` files from behavioral rigs.
 - **Conversion**: Transformed to `.rds` files using `R.matlab`.
@@ -11,7 +11,7 @@ This document outlines the architecture and data flow of the **Shiny Performance
 - **Aggregation**: Session-level summaries are appended into `TRAINING.csv`.
 - **Visualization**: Interactive Shiny app for viewing trends across animals, stages, and protocols.
 
-## 🔄 Data Flow
+## Data Flow
 
 1. `.mat` files placed into a data directory.
 2. Run `ExtractSaveData.R`:
@@ -21,8 +21,8 @@ This document outlines the architecture and data flow of the **Shiny Performance
 3. Shiny app (`shiny_app/app.R`) loads `TRAINING.csv` using `load_data.R`
 4. Visualization functions in `shiny_app/functions/` generate plots.
 
-![Mermaid Diagram](https://mermaidviewer.com/api/diagrams/cmabqds5m01y4mt1cg7bcv904/image)
 
+![Mermaid Diagram](https://www.mermaidchart.com/raw/0a19d763-79f2-440e-8a19-67efeaef9de9?theme=light&version=v0.1&format=svg)
 
 ```mermaid
 sequenceDiagram
@@ -57,15 +57,15 @@ sequenceDiagram
     Loader->>App: tidy tibble
 ```
 
-## 🗂️ Folder Structure Summary
+##  Folder Structure Summary
 
 ```
 shiny-performance-tracking/
-├── shiny\_app/
+├── shiny_app/
 │   ├── app.R                   # Main Shiny app
 │   ├── functions/              # Plot modules
 │   └── TRAINING.csv            # Aggregated session-level data
-├── utility\_functions/
+├── utility_functions/
 │   ├── ConvertToRDS.R
 │   ├── ReadBcontrolData.R
 │   ├── ReadBpodData.R
@@ -76,7 +76,7 @@ shiny-performance-tracking/
 ```
 
 
-## 📈 Plot Functions
+## Plot Functions
 
 These are modular ggplot-based scripts that power the Shiny dashboard:
 
@@ -88,7 +88,7 @@ These are modular ggplot-based scripts that power the Shiny dashboard:
 Each one uses a consistent API: filters by protocol, date, stage, experimenter, and animal.
 
 
-## 🧠 Design Notes
+## Design Notes
 
 - The pipeline is **idempotent**: new files are processed only once.
 - `ExtractSaveData.R` uses parallel processing for speed.
