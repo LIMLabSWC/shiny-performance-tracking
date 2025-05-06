@@ -1,4 +1,4 @@
-# System Architecture
+# Project Architecture
 
 This document outlines the architecture and data flow of the **Shiny Performance Tracking** system. The project processes and visualizes rodent training data collected via **BControl** or **Bpod** experimental setups.
 

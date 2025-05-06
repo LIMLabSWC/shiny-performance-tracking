@@ -82,7 +82,7 @@ Utilize `.Rprofile` for:
 
 ## Documentation
 
-- [System Architecture](docs/architecture.md)
+- [Project Architecture](docs/architecture.md)
 - [Data Dictionary](docs/data_dictionary.md)
 - [Usage Guide](docs/usage_guide.md)
 - [Server Setup Notes](docs/setup_notes.md)
