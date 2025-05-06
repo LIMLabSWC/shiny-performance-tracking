@@ -13,7 +13,7 @@ This document outlines the architecture and data flow of the **Shiny Performance
 
 ## Data Flow
 
-1. `.mat` files are collected in `/ceph/_raw_data/_rat_training_172/SoloData/Data`.
+1. `.mat` files are collected in `/ceph/_raw_data/_rat_training_172/SoloData/Data`
 2. A scheduled job (via `systemd` on our VM) triggers `ExtractSaveData.R`, which orchestrates the entire pipeline:
    - Scans the drive for new `.mat` files
    - Converts them to `.rds` files using `ConvertToRDS.R`
