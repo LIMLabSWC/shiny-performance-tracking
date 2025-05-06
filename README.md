@@ -2,9 +2,8 @@
 
 This repository provides a complete pipeline for processing rodent training data, converting raw `.mat` files into structured `.rds` files, extracting behavioral metrics, and visualizing performance trends in an interactive Shiny dashboard.
 
----
 
-## 🚀 Overview
+## Overview
 
 The system enables researchers to:
 
@@ -13,20 +12,18 @@ The system enables researchers to:
 - Automatically aggregate session-level metrics into `TRAINING.csv`.
 - Explore data interactively with **Shiny** visualizations.
 
----
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```
-
 shiny-performance-tracking/
 ├── ExtractSaveData.R        # Main ETL pipeline: from .mat to .csv
-├── shiny\_app/
+├── shiny_app/
 │   ├── app.R
 │   ├── TRAINING.csv         # Main dataset for the dashboard
-│   ├── full\_TRAINING.csv    # Optional, long-term aggregation
+│   ├── full_TRAINING.csv    # Optional, long-term aggregation
 │   └── functions/           # Modular ggplot-based visualization scripts
-├── utility\_functions/       # File parsing and processing logic
+├── utility_functions/       # File parsing and processing logic
 │   ├── ConvertToRDS.R
 │   ├── ReadBcontrolData.R
 │   ├── ReadBpodData.R
@@ -35,23 +32,22 @@ shiny-performance-tracking/
 │   └── TRAININGtoCSV.R
 ├── docs/
 │   ├── architecture.md
-│   ├── data\_dictionary.md
-│   ├── usage\_guide.md
-│   └── setup\_notes.md
+│   ├── data_dictionary.md
+│   ├── usage_guide.md
+│   └── setup_notes.md
 └── README.md                # Overview + links to docs
 
-````
+```
 
----
 
-## 📊 Shiny App
+## Shiny App
 
 Launch the app locally:
 
 ```r
 setwd("shiny_app")
 shiny::runApp()
-````
+```
 
 The dashboard includes:
 
@@ -60,9 +56,9 @@ The dashboard includes:
 * **Trial completion rates**
 * **Choice direction** distributions
 
----
 
-## 📦 Dependencies
+
+## Dependencies
 
 You’ll need the following packages:
 
@@ -76,18 +72,22 @@ You’ll need the following packages:
 
 All are automatically loaded if your `.Rprofile` is properly configured.
 
----
+Utilize `.Rprofile` for:
+- Loading utility functions
+- Building paths to data files based on the computer.
+- Loading package dependencies.
 
-## 📚 Documentation
+
+
+## Documentation
 
 * [System Architecture](docs/architecture.md)
 * [Data Dictionary](docs/data_dictionary.md)
 * [Usage Guide](docs/usage_guide.md)
 * [Server Setup Notes](docs/setup_notes.md)
 
----
 
-## 🧠 Notes
+## Notes
 
 * `ExtractSaveData.R` supports batch processing and parallel conversion.
 * New `.mat` files added to the source directory are automatically processed and appended.
