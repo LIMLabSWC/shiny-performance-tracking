@@ -13,14 +13,16 @@ This document outlines the architecture and data flow of the **Shiny Performance
 
 ## Data Flow
 
-1. `.mat` files placed into a data directory.
-2. Run `ExtractSaveData.R`:
-   - Converts new `.mat` files to `.rds` via `ConvertToRDS.R`
-   - Extracts metadata using `ReadBcontrolData.R` or `ReadBpodData.R`
-   - Appends new data into `TRAINING.csv` using `TRAININGtoCSV.R`
-3. Shiny app (`shiny_app/app.R`) loads `TRAINING.csv` using `load_data.R`
-4. Visualization functions in `shiny_app/functions/` generate plots.
-
+1. `.mat` files are collected on a centralized data drive by the rig or BControl system.
+2. A scheduled job (via `cron` or `systemd`, or run manually) triggers `ExtractSaveData.R`, which orchestrates the entire pipeline:
+   - Scans the drive for new `.mat` files
+   - Converts them to `.rds` files using `ConvertToRDS.R`
+   - Passes the `.rds` to `ReadData.R`, which wraps:
+     - `ReadBcontrolData.R` (for BControl files), or
+     - `ReadBpodData.R` (for Bpod files)
+   - Receives a structured `TRAINING` list and appends it to `TRAINING.csv` using `TRAININGtoCSV.R`
+3. The Shiny app (`shiny_app/app.R`) loads `TRAINING.csv` using `load_data.R`
+4. Interactive plots are generated using modules in `shiny_app/functions/`
 
 ```mermaid
 sequenceDiagram
