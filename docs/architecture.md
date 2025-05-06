@@ -22,8 +22,6 @@ This document outlines the architecture and data flow of the **Shiny Performance
 4. Visualization functions in `shiny_app/functions/` generate plots.
 
 
-![Mermaid Diagram](https://www.mermaidchart.com/raw/0a19d763-79f2-440e-8a19-67efeaef9de9?theme=light&version=v0.1&format=svg)
-
 ```mermaid
 sequenceDiagram
     participant Cron as cron/systemd (optional)
