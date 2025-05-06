@@ -14,12 +14,12 @@ source("ExtractSaveData.R")
 
 This will:
 
-* Identify new (unprocessed) `.mat` files
-* Convert them to `.rds` using `ConvertToRDS.R`
-* Extract metadata with `ReadBcontrolData.R` or `ReadBpodData.R`
-* Append results to `shiny_app/TRAINING.csv`
+- Identify new (unprocessed) `.mat` files
+- Convert them to `.rds` using `ConvertToRDS.R`
+- Extract metadata with `ReadBcontrolData.R` or `ReadBpodData.R`
+- Append results to `shiny_app/TRAINING.csv`
 
-> ✅ Already-processed files are skipped automatically.
+> Already-processed files are skipped automatically.
 
 
 ## Step 2: Launch the Shiny Dashboard
@@ -34,15 +34,15 @@ shiny::runApp()
 The app loads `TRAINING.csv`, applies cleaning and reshaping (via `load_data.R`), and generates interactive plots.
 
 
-## 🧼 Notes
+## Notes
 
-* The pipeline uses **parallel processing** to speed up file conversion.
-* `shiny_app/full_TRAINING.csv` can be used to accumulate data across sessions or datasets.
-* Only sessions not already listed in the CSV will be added.
-* You can rerun `ExtractSaveData.R` safely without duplicating entries.
+- The pipeline uses **parallel processing** to speed up file conversion.
+- `shiny_app/full_TRAINING.csv` can be used to accumulate data across sessions or datasets.
+- Only sessions not already listed in the CSV will be added.
+- You can rerun `ExtractSaveData.R` safely without duplicating entries.
 
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
-* If the Shiny app fails to launch, check for formatting issues in `TRAINING.csv` (e.g., broken rows).
-* Ensure that all required packages are installed: `tidyverse`, `R.matlab`, `shiny`, `ggpubr`, `ggrepel`, `parallel`.
+- If the Shiny app fails to launch, check for formatting issues in `TRAINING.csv` (e.g., broken rows).
+- Ensure that all required packages are installed: `tidyverse`, `R.matlab`, `shiny`, `ggpubr`, `ggrepel`, `parallel`.

@@ -53,8 +53,8 @@ systemctl restart shiny-server.service
 
 ## Systemd Configuration
 
-* `/etc/systemd/system/update_shiny_app.service`
-* `/etc/systemd/system/update_shiny_app.timer`
+- `/etc/systemd/system/update_shiny_app.service`
+- `/etc/systemd/system/update_shiny_app.timer`
 
 Use `systemctl` to manage:
 
@@ -63,14 +63,13 @@ sudo systemctl daemon-reload      # Reload config after edits
 systemctl list-timers             # View active timers
 ```
 
-## 🔑 SSH Key for Git Push (as root)
+## SSH Key for Git Push (as root)
 
 The cron job runs as `root`, so it needs a GitHub SSH key added for the root user.
 
 See: [GitHub’s SSH setup guide](https://docs.github.com/en/authentication/connecting-to-github-with-ssh)
 
+## Related Lab Docs
 
-## 🔗 Related Lab Docs
-
-* [Setting up Shiny Server](https://github.com/LIMLabSWC/limlab_documentation/blob/main/docs/setting_up_shiny_server.md)
-* [Scheduling & Logging Bash Scripts](https://github.com/LIMLabSWC/limlab_documentation/blob/main/docs/scheduling_and_logging_bash_scripts.md)
+- [Setting up Shiny Server](https://github.com/LIMLabSWC/limlab_documentation/blob/main/docs/setting_up_shiny_server.md)
+- [Scheduling & Logging Bash Scripts](https://github.com/LIMLabSWC/limlab_documentation/blob/main/docs/scheduling_and_logging_bash_scripts.md)
