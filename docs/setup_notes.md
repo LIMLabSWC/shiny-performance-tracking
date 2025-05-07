@@ -34,20 +34,45 @@ Data updates and Git syncs are handled automatically via a daily cron job + syst
 ```bash
 #!/bin/bash
 
+# Fail on error, unset variable, or pipe failure
+set -euo pipefail
+
+# For cron jobs, explicitly set $HOME
 export HOME=/root/
+
+# Timestamp for log file name
 DATE=$(date +"%Y-%m-%d_%H-%M")
+
+# Redirect stdout and stderr to timestamped log
 exec > >(tee -a /mnt/ceph/_logs/shiny_log_$DATE.txt) 2>&1
+
+echo "===== SCRIPT START: $(date) ====="
 
 cd /srv/shiny-server/shiny-performance-tracking
 git config --global --add safe.directory /srv/shiny-server/shiny-performance-tracking
-git checkout master
-git pull
-Rscript ExtractSaveData.R
-git add .
-git commit -m 'daily update of TRAINING.csv'
-git push
 
-systemctl restart shiny-server.service
+echo "Checking out master branch..."
+git checkout master
+
+echo "Pulling latest changes..."
+git pull
+
+echo "Running R script..."
+Rscript ExtractSaveData.R
+
+echo "Checking for changes..."
+if ! git diff --quiet; then
+    echo "Changes detected. Committing and pushing..."
+    git add .
+    git commit -m 'daily update of TRAINING.csv'
+    git push
+    echo "Restarting shiny-server..."
+    systemctl restart shiny-server.service
+else
+    echo "No changes to commit. Skipping push and restart."
+fi
+
+echo "===== SCRIPT END: $(date) ====="
 ```
 
 
