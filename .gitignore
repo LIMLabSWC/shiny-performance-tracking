@@ -1,10 +1,37 @@
+# RStudio project-specific metadata (auto-generated, not needed in repo)
 .Rproj.user
-.Rhistory
-.RData
-.Ruserdata
+
+# User-level RStudio state
+.Ruserdata 
+
+# Workspace saved between R sessions (discouraged in version control)
+.RData   
+
+# R command history (personal, changes constantly)
+.Rhistory      
+
+# Data folder (likely contains large or private raw data files)
 data/
+
+# OAuth tokens (should never be tracked for security reasons)
 .httr-oauth
+
+# Project files (we want only one .Rproj file versioned, or none)
 shiny-performance-tracking.Rproj
-*.Rproj
+
+# Ignores any other stray .Rproj files (e.g. from subprojects)
+*.Rproj        
+
+# Log files (temporary output from jobs/scripts)
 *.log
 
+# Developer scratch scripts — not part of reproducible pipeline
+analysis.R
+exploring_data.R
+
+# Package installer — handled by .Rprofile, no longer needed in repo
+dependencies.R
+
+shiny_app/rsconnect/
+
+shiny_app/TrialByTrial.csv
