@@ -27,7 +27,7 @@ This file defines the meaning and origin of each column in `TRAINING.csv`, the m
 | `correct_trials`   | Number of correct (i.e., rewarded) trials |
 | `error_trials`     | Number of incorrect responses |
 | `violation_trials` | Number of rule violations during the session |
-| `timeoout_trials`  | Number of timeout trials |
+| `timeout_trials`   | Number of timeout trials |
 | `init_CP`          | Initial center poke duration |
 | `total_CP`         | Total center poke duration |
 | `A1_time`, `A2_time` | Time spent in certain state/action windows |
