@@ -1,21 +1,46 @@
+# .Rprofile
+# Configuration file for the Shiny Performance Tracking system
+# This file sets up the R environment, loads dependencies, and configures paths
+# See docs/architecture.md for detailed system design
+
+# ============================================================================
+# 1. Environment Setup
+# ============================================================================
+# Initialize the R environment and load utility functions
+
+# Uncomment to activate renv for package management
 # source("renv/activate.R")
+
 .First <- function() {
-  # Source all utility functions
-  source(file.path("utility_functions", "ConvertToRDS.R"))
-  source(file.path("utility_functions", "ReadData.R"))
-  source(file.path("utility_functions", "TRAININGtoCSV.R"))
-  source(file.path("utility_functions", "ReadBpodData.R"))
-  source(file.path("utility_functions", "ReadBcontrolData.R"))
-  source(file.path("utility_functions", "ReadTrialData.R"))
-  # to be completed: source(file.path("utility_functions", "ReadBonsaiData"))
+  # Load all utility functions from the utility_functions directory
+  utility_files <- c(
+    "ConvertToRDS.R",
+    "ReadData.R",
+    "TRAININGtoCSV.R",
+    "ReadBpodData.R",
+    "ReadBcontrolData.R",
+    "ReadTrialData.R"
+    # TODO: Add Bonsai data support
+    # "ReadBonsaiData.R"
+  )
+  
+  # Source each utility function
+  sapply(utility_files, function(file) {
+    source(file.path("utility_functions", file))
+  })
 }
 
+# ============================================================================
+# 2. Path Configuration
+# ============================================================================
+# Set up data paths based on the current system
 
-# Dynamically detect the computer name
+# Detect the current system
 computer_name <- Sys.info()[["nodename"]]
 
-# Define paths based on the computer name
+# Configure paths based on system
 if (computer_name == "LAPTOP-DSAR795N") {
+  # Windows laptop configuration
   path_to_mat_files <- file.path(
     "Z:", "_raw_data", "rat_training_172", "SoloData", "Data"
   )
@@ -23,6 +48,7 @@ if (computer_name == "LAPTOP-DSAR795N") {
     "Z:", "_raw_data", "rat_training_172", "rds_files"
   )
 } else if (computer_name == "akramihpc1.akramilab.swc.ucl.ac.uk") {
+  # HPC configuration
   path_to_mat_files <- file.path(
     "/mnt", "ceph", "_raw_data", "rat_training_172", "SoloData", "Data"
   )
@@ -33,37 +59,40 @@ if (computer_name == "LAPTOP-DSAR795N") {
   stop(paste("Unsupported computer name:", computer_name))
 }
 
+# ============================================================================
+# 3. Package Dependencies
+# ============================================================================
+# Load required packages grouped by functionality
 
-# Load commonly used libraries
-# Data Visualization and Manipulation
-library(ggplot2) # For creating elegant and complex data visualizations
-library(ggpubr) # For enhancing ggplot2 plots with additional functionalities
-library(ggrepel) # For avoiding overlapping text labels in ggplot2 plots
-library(plotly) # For interactive and web-based data visualizations
+# Core Data Science
+library(tidyverse)    # Data manipulation and visualization
+library(magrittr)     # Pipe operator for cleaner code
+library(parallel)     # Parallel computing support
 
-# Data Manipulation and Wrangling
-library(tidyverse) # Packages for data manipulation and visualization
-library(forcats) # For working with categorical data
-library(purrr) # For functional programming tools
-library(stringr) # For string manipulation
-library(readr) # For reading rectangular data 
-library(tibble) # For tibbles, a modern reimagining of data frames
-library(zoo) # For working with time series data
-library(chron) # For working with time series data
-library(padr) # For padding time series data
+# Data Import/Export
+library(R.matlab)     # MATLAB file support
+library(readr)        # Fast data import
+library(tibble)       # Modern data frames
 
-# Data Import and Export
-library(R.matlab) # For importing and exporting data between R and MATLAB
+# Data Manipulation
+library(stringr)      # String manipulation
+library(forcats)      # Categorical data handling
+library(purrr)        # Functional programming
+library(zoo)          # Time series analysis
+library(chron)        # Time series analysis
+library(padr)         # Time series padding
 
-# Shiny and Web Applications
-library(shiny) # For building interactive web applications with R
-library(shinyjs) # For adding JavaScript interactivity to Shiny apps
-library(DT) # For creating interactive tables in Shiny apps
-library(kableExtra) # For enhancing tables in R Markdown and Shiny apps
-library(rmarkdown) # For creating dynamic documents with R Markdown
-library(knitr) # For knitting R Markdown documents into various formats
+# Visualization
+library(ggplot2)      # Base plotting
+library(ggpubr)       # Enhanced ggplot2
+library(ggrepel)      # Label positioning
+library(plotly)       # Interactive plots
+library(gridExtra)    # Multi-plot layouts
 
-# Utilities and Helpers
-library(gridExtra) # For arranging multiple grid graphics on a page
-library(magrittr) # For a pipe operator that makes code more readable
-library(parallel) # For parallel computing in R
+# Shiny and Web
+library(shiny)        # Web application framework
+library(shinyjs)      # JavaScript integration
+library(DT)           # Interactive tables
+library(kableExtra)   # Enhanced tables
+library(rmarkdown)    # Dynamic documents
+library(knitr)        # R Markdown processing
