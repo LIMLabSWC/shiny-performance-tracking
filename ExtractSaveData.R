@@ -3,6 +3,24 @@
 # This script orchestrates the data pipeline from raw .mat files to TRAINING.csv
 # See docs/architecture.md for detailed system design
 
+# Suppress package startup messages for cleaner logging
+suppressPackageStartupMessages({
+  library(tidyverse)    # includes dplyr, ggplot2, purrr, etc.
+  library(plotly)
+  library(R.matlab)
+  library(zoo)
+  library(chron)
+  library(gridExtra)
+  library(shinyjs)
+  library(DT)
+  library(kableExtra)
+})
+
+# Print initial status
+cat(sprintf("\n[%s] Starting data extraction\n", format(Sys.time(), "%Y-%m-%d %H:%M:%S")))
+cat(sprintf("Input path: %s\n", path_to_mat_files))
+cat(sprintf("Output path: %s\n", path_to_rds_files))
+
 # ============================================================================
 # 1. Configuration and Setup
 # ============================================================================
