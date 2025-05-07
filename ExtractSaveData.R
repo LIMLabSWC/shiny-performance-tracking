@@ -1,16 +1,37 @@
-# Define the path to the data folder
+# ExtractSaveData.R
+# Main batch processor for the Shiny Performance Tracking system
+# This script orchestrates the data pipeline from raw .mat files to TRAINING.csv
+# See docs/architecture.md for detailed system design
+
+# ============================================================================
+# 1. Configuration and Setup
+# ============================================================================
+# Define paths and initialize variables for the data processing pipeline
+
+# Input path for raw .mat files from behavioral rigs
 in_path <- path_to_mat_files
 
-# List all .mat files in the data folder, excluding test data
+# ============================================================================
+# 2. File Discovery and Filtering
+# ============================================================================
+# Scan for new .mat files and filter out test/experimenter data
+
+# List all .mat files in the data folder
 file_list <- list.files(in_path, pattern = "\\.mat$", recursive = TRUE)
+
+# Filter out experimenter data, session settings, and fake subjects
 file_list <- file_list[!grepl(
   "experimenter|Session Settings|FakeSubject",
   file_list
 )]
 
+# ============================================================================
+# 3. Conversion Status Check
+# ============================================================================
+# Identify which files need to be converted from .mat to .rds format
+
 # List files already converted to rds
 rds_list <- list.files(path_to_rds_files)
-
 
 # Identify not yet converted mat files by comparing base file names
 not_yet_conv <- setdiff(
@@ -18,8 +39,7 @@ not_yet_conv <- setdiff(
   basename(rds_list) %>% str_remove(pattern = "\\.rds$")
 )
 
-
-# Add path to the not yet converted mat files
+# Add full paths to the not yet converted mat files
 to_be_conv <- if (length(not_yet_conv) > 0) {
   file.path(in_path, file_list[str_detect(
     file_list,
@@ -29,25 +49,33 @@ to_be_conv <- if (length(not_yet_conv) > 0) {
   character()
 }
 
+# ============================================================================
+# 4. Parallel Conversion Process
+# ============================================================================
+# Convert new .mat files to .rds format using parallel processing
 
-# Convert not yet converted mat files to rds using parallel processing
 if (length(to_be_conv) > 0) {
-  # Set up a parallel backend using the number of cores available
-  # Subtract 1 to leave one core free for the main R process
+  # Set up parallel backend using available cores minus one
   cl <- makeCluster(detectCores() - 1)
 
-  # Use parLapply to apply the ConvertToRDS function in parallel
+  # Convert files in parallel using ConvertToRDS function
   parLapply(cl, to_be_conv, ConvertToRDS)
 
-  # Stop the cluster after use
+  # Clean up parallel cluster
   stopCluster(cl)
 } else {
-  warning("Nothing to convert")
+  warning("No new files to convert")
 }
 
+# ============================================================================
+# 5. Data Aggregation
+# ============================================================================
+# Process .rds files and append to TRAINING.csv
 
-# Read rds files to a tibble and save them to a csv file
+# Get updated list of rds files
 rds_list <- list.files(path_to_rds_files)
+
+# Identify which rds files need to be appended to TRAINING.csv
 to_append <- setdiff(
   rds_list,
   suppressMessages(suppressWarnings(
@@ -61,24 +89,19 @@ to_append <- setdiff(
   ))
 )
 
+# Process each new file and append to TRAINING.csv
 walk(to_append, ~ ReadData(rds_file = .x) %>% TRAININGtoCSV())
 
-# Trial by trial data
+# ============================================================================
+# 6. Optional: Trial-by-Trial Data Processing
+# ============================================================================
+# Uncomment to enable trial-level data extraction
 # walk(rds_list, ~ ReadData(rds_file = .x, trialData = TRUE) %>%
 #        TRAININGtoCSV(filename = "TrialByTrial.csv"))
-#
-# # Specific example of trial by trial data
+
+# Example of processing a specific file for trial data
 # ReadData(
 #   rds_file = "LT01_Gap_Detection_20191011_093950.mat.rds",
 #   trialData = TRUE) %>%
 #   TRAININGtoCSV(filename = "TrialByTrial.csv")
 
-# Documentation:
-# Variables:
-# - in_path: The path to the data folder.
-# - file_list: A list of all .mat files in the data folder, excluding test data.
-# - rds_list: A list of files already converted to .rds.
-# - not_yet_conv: A list of .mat files that have not yet been converted to .rds.
-# - to_be_conv: A list of paths to .mat files that need to be converted to .rds.
-# - to_append: A list of .rds files that need to be appended
-#   to the TRAINING.csv file.
