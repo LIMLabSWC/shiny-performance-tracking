@@ -34,7 +34,7 @@ shiny-performance-tracking/
 │   ├── ReadData.R
 │   ├── ReadTrialData.R
 │   └── TRAININGtoCSV.R
-├── .Rprofile                # R profile for package loading and configuration
+├── .Rprofile                # R environment configuration and package management
 ├── ExtractSaveData.R        # Main ETL pipeline: from .mat to .csv
 └── README.md                # Overview + links to docs
 
@@ -61,22 +61,42 @@ The dashboard includes:
 
 ## Dependencies
 
-You’ll need the following packages:
+The system uses several R packages organized by functionality:
 
-- `tidyverse`
-- `ggplot2`
-- `ggrepel`
-- `ggpubr`
-- `R.matlab`
-- `parallel`
-- `readr`
+### Core Data Science
+- `tidyverse` - Data manipulation and visualization
+- `magrittr` - Pipe operator for cleaner code
+- `parallel` - Parallel computing support
 
-All are automatically loaded if your `.Rprofile` is properly configured.
+### Data Import/Export
+- `R.matlab` - MATLAB file support
+- `readr` - Fast data import
+- `tibble` - Modern data frames
 
-Utilize `.Rprofile` for:
-- Loading utility functions
-- Building paths to data files based on the computer.
-- Loading package dependencies.
+### Data Manipulation
+- `stringr` - String manipulation
+- `forcats` - Categorical data handling
+- `purrr` - Functional programming
+- `zoo`, `chron`, `padr` - Time series analysis
+
+### Visualization
+- `ggplot2` - Base plotting
+- `ggpubr` - Enhanced ggplot2
+- `ggrepel` - Label positioning
+- `plotly` - Interactive plots
+- `gridExtra` - Multi-plot layouts
+
+### Shiny and Web
+- `shiny` - Web application framework
+- `shinyjs` - JavaScript integration
+- `DT` - Interactive tables
+- `kableExtra` - Enhanced tables
+- `rmarkdown`, `knitr` - Dynamic documents
+
+All dependencies are automatically loaded through `.Rprofile`, which also:
+- Manages utility function loading using a vector-based approach
+- Configures system-specific data paths
+- Sets up the R environment for optimal performance
 
 
 
@@ -93,3 +113,4 @@ Utilize `.Rprofile` for:
 - `ExtractSaveData.R` supports batch processing and parallel conversion.
 - New `.mat` files added to the source directory are automatically processed and appended.
 - The system supports both session-level and trial-by-trial data (optional).
+- Utility functions are loaded dynamically through `.Rprofile` for better maintainability.
