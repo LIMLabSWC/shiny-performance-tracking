@@ -24,7 +24,9 @@ suppressPackageStartupMessages({
 options(warn = 0)
 
 # Print initial status
-cat(sprintf("\n[%s] Starting data extraction\n", format(Sys.time(), "%Y-%m-%d %H:%M:%S")))
+cat(sprintf(
+  "\n[%s] Starting data extraction\n", 
+  format(Sys.time(), "%Y-%m-%d %H:%M:%S")))
 cat(sprintf("Input path: %s\n", path_to_mat_files))
 cat(sprintf("Output path: %s\n", path_to_rds_files))
 
