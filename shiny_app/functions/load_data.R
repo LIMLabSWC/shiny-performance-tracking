@@ -30,6 +30,10 @@ TRAINING <- TRAINING %>%
     )
   ) %>%
   mutate(stage = replace(stage, reward_type == "NoReward", "3_NoReward")) %>%
+  # replace NAs in stage with "non-defined stage"
+  mutate(
+    stage = replace(stage, is.na(stage), "non-defined stage")
+  ) %>% 
   # Reshape the data to long format for trials
   rowwise() %>%
   ungroup() %>%
