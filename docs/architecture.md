@@ -26,35 +26,68 @@ This document outlines the architecture and data flow of the **Shiny Performance
 
 ```mermaid
 sequenceDiagram
-    participant Cron as cron/systemd (optional)
+    participant Cron as Scheduler
     participant Extract as ExtractSaveData.R
-    participant Drive as Centralized Data Drive
+    participant Drive as Data Drive (/ceph/_raw_data)
     participant Convert as ConvertToRDS.R
-    participant ReadData as ReadData.R (wrapper)
-    participant Bcontrol as ReadBcontrolData.R
-    participant Bpod as ReadBpodData.R
+    participant ReadData as ReadData.R
+    participant Parser as Data Parser
     participant CSV as TRAININGtoCSV.R
-    participant Loader as load_data.R
-    participant App as Shiny app
+    participant App as Shiny App
 
-    Cron->>Extract: scheduled trigger
-    Extract->>Drive: scan for new .mat files
-    Extract->>Convert: call ConvertToRDS.R
+    Note over Cron,App: Scheduled Pipeline
+    Cron->>Extract: systemd trigger
+    Extract->>Drive: scan for .mat files
+    Extract->>Convert: convert to .rds
     Convert-->>Extract: .rds file
-    Extract->>ReadData: pass .rds file
 
-    alt Source is BControl
-        ReadData->>Bcontrol: .rds file
-        Bcontrol-->>ReadData: TRAINING list
-    else Source is Bpod
-        ReadData->>Bpod: .rds file
-        Bpod-->>ReadData: TRAINING list
+    Note over Cron,App: Data Processing
+    Extract->>ReadData: pass .rds file
+    ReadData->>Parser: parse data
+
+    alt Data Source
+        Parser->>Parser: ReadBcontrolData.R
+        Parser->>Parser: ReadBpodData.R
     end
 
-    ReadData-->>Extract: TRAINING list
-    Extract->>CSV: pass TRAINING list
-    CSV->>Loader: TRAINING.csv
-    Loader->>App: tidy tibble
+    Parser-->>ReadData: TRAINING list
+    ReadData-->>Extract: structured data
+    Extract->>CSV: append to TRAINING.csv
+    CSV->>App: load_data.R
+
+    Note over Cron,App: Components
+    Cron->>Cron: systemd service
+    Extract->>Extract: parallel processing
+    Parser->>Parser: metadata extraction
+    CSV->>CSV: data aggregation
+```
+
+## Shiny App Architecture
+
+```mermaid
+sequenceDiagram
+    participant UI as UI Layer
+    participant Server as Server Logic
+    participant Data as Data Layer
+    participant Plots as Visualization
+
+    Note over UI,Plots: App Structure
+    UI->>Server: Dashboard Layout (app.R)
+    Server->>Data: load_data.R
+    Data-->>Server: TRAINING tibble
+    
+    Note over UI,Plots: Reactive Flow
+    UI->>Server: Filter Changes (protocol/date/stage)
+    Server->>Data: Filter Data (dplyr)
+    Data-->>Server: Filtered Data
+    Server->>Plots: Generate Plots (ggplot2)
+    Plots-->>UI: Update Display
+
+    Note over UI,Plots: Components
+    UI->>UI: Sidebar Filters (selectInput/dateRangeInput)
+    UI->>UI: Plot Panels (plotOutput)
+    Server->>Server: Reactive Values (reactive/reactiveVal)
+    Plots->>Plots: Plot Modules (ChoiceDirectionPlot, CorrectRatioPlot)
 ```
 
 ##  Folder Structure Summary
