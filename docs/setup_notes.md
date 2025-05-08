@@ -42,37 +42,98 @@ export HOME=/root/
 
 # Timestamp for log file name
 DATE=$(date +"%Y-%m-%d_%H-%M")
+LOG_FILE="/mnt/ceph/_logs/shiny_log_$DATE.txt"
 
-# Redirect stdout and stderr to timestamped log
-exec > >(tee -a /mnt/ceph/_logs/shiny_log_$DATE.txt) 2>&1
+# Function for logging
+log() {
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" | tee -a "$LOG_FILE"
+}
 
-echo "===== SCRIPT START: $(date) ====="
+# Function for error handling
+handle_error() {
+    log "ERROR: An error occurred in the script at line $1"
+    log "Last command exit code: $2"
+    exit 1
+}
 
-cd /srv/shiny-server/shiny-performance-tracking
-git config --global --add safe.directory /srv/shiny-server/shiny-performance-tracking
+# Set up error handling
+trap 'handle_error ${LINENO} $?' ERR
 
-echo "Checking out master branch..."
-git checkout master
+# Start logging
+log "===== SCRIPT START ====="
 
-echo "Pulling latest changes..."
-git pull
-
-echo "Running R script..."
-Rscript ExtractSaveData.R
-
-echo "Checking for changes..."
-if ! git diff --quiet; then
-    echo "Changes detected. Committing and pushing..."
-    git add .
-    git commit -m 'daily update of TRAINING.csv'
-    git push
-    echo "Restarting shiny-server..."
-    systemctl restart shiny-server.service
-else
-    echo "No changes to commit. Skipping push and restart."
+# Check if required directories exist
+if [ ! -d "/srv/shiny-server/shiny-performance-tracking" ]; then
+    log "ERROR: Application directory not found"
+    exit 1
 fi
 
-echo "===== SCRIPT END: $(date) ====="
+if [ ! -d "/mnt/ceph/_logs" ]; then
+    log "ERROR: Log directory not found"
+    exit 1
+fi
+
+# Change to application directory
+cd /srv/shiny-server/shiny-performance-tracking || {
+    log "ERROR: Failed to change to application directory"
+    exit 1
+}
+
+# Ensure git is configured for this directory
+git config --global --add safe.directory /srv/shiny-server/shiny-performance-tracking
+
+# Git operations with error checking
+log "Checking out master branch..."
+if ! git checkout master; then
+    log "ERROR: Failed to checkout master branch"
+    exit 1
+fi
+
+log "Pulling latest changes..."
+if ! git pull; then
+    log "ERROR: Failed to pull latest changes"
+    exit 1
+fi
+
+# Run R script with error checking
+log "Running R script..."
+if ! Rscript ExtractSaveData.R; then
+    log "ERROR: R script failed"
+    exit 1
+fi
+
+# Check for changes and handle git operations
+log "Checking for changes..."
+if ! git diff --quiet; then
+    log "Changes detected. Committing and pushing..."
+    if ! git add .; then
+        log "ERROR: Failed to add changes"
+        exit 1
+    fi
+
+    if ! git commit -m "daily update of TRAINING.csv"; then
+        log "ERROR: Failed to commit changes"
+        exit 1
+    fi
+
+    if ! git push; then
+        log "ERROR: Failed to push changes"
+        exit 1
+    fi
+
+    log "Restarting shiny-server..."
+    if ! systemctl restart shiny-server.service; then
+        log "ERROR: Failed to restart shiny-server"
+        exit 1
+    fi
+else
+    log "No changes to commit. Skipping push and restart."
+fi
+
+log "===== SCRIPT END ====="
+
+# Exit successfully
+exit 0
 ```
 
 
