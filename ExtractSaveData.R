@@ -3,18 +3,25 @@
 # This script orchestrates the data pipeline from raw .mat files to TRAINING.csv
 # See docs/architecture.md for detailed system design
 
-# Suppress package startup messages for cleaner logging
+# Suppress all package startup messages
+options(warn = -1)  # Suppress warnings
+options(message = FALSE)  # Suppress messages
+
+# Load required packages silently
 suppressPackageStartupMessages({
-  library(tidyverse)    # includes dplyr, ggplot2, purrr, etc.
-  library(plotly)
-  library(R.matlab)
-  library(zoo)
-  library(chron)
-  library(gridExtra)
-  library(shinyjs)
-  library(DT)
-  library(kableExtra)
+  library(tidyverse, quietly = TRUE)    # includes dplyr, ggplot2, purrr, etc.
+  library(plotly, quietly = TRUE)
+  library(R.matlab, quietly = TRUE)
+  library(zoo, quietly = TRUE)
+  library(chron, quietly = TRUE)
+  library(gridExtra, quietly = TRUE)
+  library(shinyjs, quietly = TRUE)
+  library(DT, quietly = TRUE)
+  library(kableExtra, quietly = TRUE)
 })
+
+# Restore warning level
+options(warn = 0)
 
 # Print initial status
 cat(sprintf("\n[%s] Starting data extraction\n", format(Sys.time(), "%Y-%m-%d %H:%M:%S")))
