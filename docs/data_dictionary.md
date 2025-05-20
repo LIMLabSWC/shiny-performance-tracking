@@ -2,7 +2,6 @@
 
 This file defines the meaning and origin of each column in `TRAINING.csv`, the main dataset used by the Shiny app.
 
-
 ## Column Descriptions
 
 | Column             | Description |
@@ -35,8 +34,6 @@ This file defines the meaning and origin of each column in `TRAINING.csv`, the m
 | `session_length`   | Derived from `save_time - start_time` |
 | `choice_direction` | Either `"left_trials"` or `"right_trials"` (long format) |
 | `No_pokes`         | Number of pokes for the given choice direction |
-
-
 
 ## Notes
 

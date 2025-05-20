@@ -2,7 +2,6 @@
 
 This document outlines the architecture and data flow of the **Shiny Performance Tracking** system. The project processes and visualizes rodent training data collected via **BControl** or **Bpod** experimental setups.
 
-
 ## High-Level Components
 
 - **Raw Input**: `.mat` files from behavioral rigs.
@@ -90,9 +89,9 @@ sequenceDiagram
     Plots->>Plots: Plot Modules (ChoiceDirectionPlot, CorrectRatioPlot)
 ```
 
-##  Folder Structure Summary
+## Folder Structure Summary
 
-```
+```text
 shiny-performance-tracking/
 ├── shiny_app/
 │   ├── app.R                   # Main Shiny app
@@ -108,7 +107,6 @@ shiny-performance-tracking/
 
 ```
 
-
 ## Plot Functions
 
 These are modular ggplot-based scripts that power the Shiny dashboard:
@@ -119,7 +117,6 @@ These are modular ggplot-based scripts that power the Shiny dashboard:
 - `StageTrackingPlot.R`: Tracks stage progression per animal
 
 Each one uses a consistent API: filters by protocol, date, stage, experimenter, and animal.
-
 
 ## Design Notes
 

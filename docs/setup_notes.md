@@ -2,16 +2,15 @@
 
 These notes are for configuring the Shiny Server deployment, scheduled updates, and system-level setup on our VM.
 
-
 ## Shiny Server Setup
 
 See [lab documentation](https://github.com/viktorpm/limlab_documentation/blob/main/docs/Setting%20up%20Shiny%20server.md) for full instructions. (Access required)
 
-### Key location on the server:
-```
+### Key location on the server
+
+```bash
 /srv/shiny-server/shiny-performance-tracking
 ```
-
 
 ## System-wide R Package Installation
 
@@ -23,7 +22,6 @@ R
 # Then install packages as root
 install.packages("shiny")
 ```
-
 
 ## Scheduled Data Processing
 
@@ -135,7 +133,6 @@ log "===== SCRIPT END ====="
 # Exit successfully
 exit 0
 ```
-
 
 ## Systemd Configuration
 
