@@ -1,4 +1,4 @@
-path_to_qp_mice <- file.path("V:","Quentin","Head_Fixed_Behavior","Data") 
+path_to_qp_mice <- file.path("Z:","Quentin","Head_Fixed_Behavior","Data") 
 
 files <- list.files(
   path_to_qp_mice, 
@@ -45,7 +45,7 @@ plot(hc)
 
 qp_mice <- read_csv(
   file.path(
-    "V:","Quentin","Head_Fixed_Behavior","Data" ,
+    "Z:","Quentin","Head_Fixed_Behavior","Data" ,
     "Concat_Standard", "SC_Data_Standardized.csv"
     )
   )
@@ -98,7 +98,7 @@ qp_mice %>%
   dplyr::filter(Trial == 1)
 
 # Training stage
-qp_mice %>% 
+stage_plt <- qp_mice %>% 
   dplyr::filter(
     Date > daterange,
     Trial == 1
@@ -126,7 +126,7 @@ qp_mice %>%
 
 
 # correct ratio
-qp_mice %>% 
+corretct_ratio_plt <- qp_mice %>% 
   dplyr::filter(Date > daterange) %>% 
   dplyr::group_by(Participant_ID, Date) %>%
   summarise(
@@ -168,7 +168,7 @@ qp_mice %>%
 
 
 # completed trials
-qp_mice %>% 
+completed_trials_plt <- qp_mice %>% 
   dplyr::filter(Date > daterange) %>% 
   dplyr::group_by(Participant_ID, Date) %>%
   summarise(
@@ -201,7 +201,7 @@ qp_mice %>%
 
 
 # choice direction
-qp_mice %>% 
+choice_direction_plt <- qp_mice %>% 
   dplyr::filter(Date > daterange) %>% 
   dplyr::group_by(Participant_ID, Date) %>%
   summarise(
@@ -217,3 +217,12 @@ qp_mice %>%
     size = 2
   ) +
   plot_theme_settings()
+
+
+cowplot::plot_grid(choice_direction_plt, stage_plt, 
+                   corretct_ratio_plt, completed_trials_plt,
+                   ncol = 2, nrow = 2, align = "hv", axis = "tblr",
+                   labels = c("A", "B", "C", "D"))
+
+
+
