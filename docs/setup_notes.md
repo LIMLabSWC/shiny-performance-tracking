@@ -17,7 +17,7 @@ See [lab documentation](https://github.com/viktorpm/limlab_documentation/blob/ma
 To install R packages for all users on `akramihpc1`, switch to superuser:
 
 ```bash
-sudo su
+sudo -i
 R
 # Then install packages as root
 install.packages("shiny")
