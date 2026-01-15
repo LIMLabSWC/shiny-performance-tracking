@@ -4,7 +4,7 @@ These notes are for configuring the Shiny Server deployment, scheduled updates, 
 
 ## Shiny Server Setup
 
-See [lab documentation](https://github.com/viktorpm/limlab_documentation/blob/main/docs/Setting%20up%20Shiny%20server.md) for full instructions. (Access required)
+See [lab documentation](https://dashboard.lim.bio/docs/setting_up_shiny_server/) for full instructions. (Access required)
 
 ### Key location on the server
 
@@ -156,3 +156,4 @@ See: [GitHub’s SSH setup guide](https://docs.github.com/en/authentication/conn
 
 - [Setting up Shiny Server](https://github.com/LIMLabSWC/limlab_documentation/blob/main/docs/setting_up_shiny_server.md)
 - [Scheduling & Logging Bash Scripts](https://github.com/LIMLabSWC/limlab_documentation/blob/main/docs/scheduling_and_logging_bash_scripts.md)
+
