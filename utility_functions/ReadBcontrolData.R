@@ -92,12 +92,22 @@ ReadBcontrolData <- function(rds_file, rat_data, data_source) {
         paste(section_name, ".hit.history", sep = ""),
         rat_data$saved[, , ]
       ) == 0) %>% na.omit() %>% length(),
-    violation_trials = get(
+
+    violation_trials = if (exists(
       paste(section_name, ".violation.history", sep = ""),
-      rat_data$saved[, , ]
-    ) %>%
-      as.numeric() %>%
-      sum(na.rm = T),
+      where = rat_data$saved[, , ],
+      inherits = FALSE
+    )) {
+      get(
+        paste(section_name, ".violation.history", sep = ""),
+        rat_data$saved[, , ]
+      ) %>%
+        as.numeric() %>%
+        sum(na.rm = T)
+    } else {
+      NA_real_
+    },
+
     timeoout_trials = get(
       paste(section_name, ".timeout.history", sep = ""),
       rat_data$saved[, , ]
