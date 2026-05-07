@@ -23,9 +23,26 @@ ReadBcontrolData <- function(rds_file, rat_data, data_source) {
     unlist() %>%
     `[[`(length(.)) + 1
 
+  _field_exists_check <- function(field_name) {
+    if (exists(
+      paste(section_name, field_name, sep = ""),
+      where = rat_data$saved[, , ],
+      inherits = FALSE
+    )) {
+      get(
+        paste(section_name, field_name, sep = ""),
+        rat_data$saved[, , ]
+      )
+    } else {
+      NA
+    }
+  }
+
   # Initialize TRAINING list to store processed data
   TRAINING <- list(
-    # Files, animals, experimenters
+    # =========================
+    # Session metadata
+    # =========================
     file = rds_file,
     settings_file = rat_data$saved[, , ]$SavingSection.settings.file %>%
       as.character() %>%
@@ -42,7 +59,9 @@ ReadBcontrolData <- function(rds_file, rat_data, data_source) {
     rig_id = rat_data$saved[, , ]$WaterValvesSection.RigID %>%
       as.character(),
 
-    # Date, time, stage
+    # =========================
+    # Timing and training stage
+    # =========================
     date = rat_data$saved[, , ]$SavingSection.SaveTime %>%
       as.character() %>%
       substr(1, 11),
@@ -56,7 +75,9 @@ ReadBcontrolData <- function(rds_file, rat_data, data_source) {
       substr(13, 20),
     stage = rat_data$saved[, , ]$SideSection.training.stage %>% as.numeric(),
 
-    # Trials
+    # =========================
+    # Trial summary metrics
+    # =========================
     right_trials = rat_data$saved[, , ]$SideSection.previous.sides %>%
       intToUtf8(multiple = T) %>%
       `[`(. == "r") %>%
@@ -92,28 +113,20 @@ ReadBcontrolData <- function(rds_file, rat_data, data_source) {
         paste(section_name, ".hit.history", sep = ""),
         rat_data$saved[, , ]
       ) == 0) %>% na.omit() %>% length(),
-
-    violation_trials = if (exists(
-      paste(section_name, ".violation.history", sep = ""),
-      where = rat_data$saved[, , ],
-      inherits = FALSE
-    )) {
-      get(
-        paste(section_name, ".violation.history", sep = ""),
-        rat_data$saved[, , ]
-      ) %>%
-        as.numeric() %>%
-        sum(na.rm = T)
-    } else {
-      NA_real_
+    # Keep NA when a protocol does not define this history field.
+    violation_trials = {
+      x <- _field_exists_check(".violation.history")
+      if (all(is.na(x))) NA_real_ else sum(as.numeric(x), na.rm = TRUE)
+    },
+    # Keep NA when a protocol does not define this history field.
+    timeoout_trials = {
+      x <- _field_exists_check(".timeout.history")
+      if (all(is.na(x))) NA_real_ else sum(as.numeric(x), na.rm = TRUE)
     },
 
-    timeoout_trials = get(
-      paste(section_name, ".timeout.history", sep = ""),
-      rat_data$saved[, , ]
-    ) %>%
-      as.numeric() %>%
-      sum(na.rm = T),
+    # =========================
+    # Task timing / reward settings
+    # =========================
     init_CP = rat_data$saved[, , ]$SideSection.init.CP.duration %>%
       as.numeric(),
     total_CP = rat_data$saved[, , ]$SideSection.Total.CP.duration %>%
