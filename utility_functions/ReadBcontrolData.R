@@ -23,7 +23,7 @@ ReadBcontrolData <- function(rds_file, rat_data, data_source) {
     unlist() %>%
     `[[`(length(.)) + 1
 
-  _field_exists_check <- function(field_name) {
+  field_exists_check <- function(field_name) {
     if (exists(
       paste(section_name, field_name, sep = ""),
       where = rat_data$saved[, , ],
@@ -115,12 +115,12 @@ ReadBcontrolData <- function(rds_file, rat_data, data_source) {
       ) == 0) %>% na.omit() %>% length(),
     # Keep NA when a protocol does not define this history field.
     violation_trials = {
-      x <- _field_exists_check(".violation.history")
+      x <- field_exists_check(".violation.history")
       if (all(is.na(x))) NA_real_ else sum(as.numeric(x), na.rm = TRUE)
     },
     # Keep NA when a protocol does not define this history field.
     timeoout_trials = {
-      x <- _field_exists_check(".timeout.history")
+      x <- field_exists_check(".timeout.history")
       if (all(is.na(x))) NA_real_ else sum(as.numeric(x), na.rm = TRUE)
     },
 
